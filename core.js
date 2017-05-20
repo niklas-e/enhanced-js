@@ -1,9 +1,45 @@
 (() => {
+    var root = document;
+
     //let e = window.e = selector => selector ? [].slice.call(document.querySelectorAll(selector)).map(EnhancedElement) : 'v0.1';
-    let e = window.e = selector => selector ? {
-        elements: [].slice.call(document.querySelectorAll(selector)).map(EnhancedElement),
+    let e = window.e = (selector, context) => selector ? {
+        elements: queryDom(selector, context),
         addClass: function(cssClass) { this.elements.forEach(el => el.addClass(cssClass))}
      } : 'v0.1';
+
+    e.single = selector => EnhancedElement(document.querySelector(selector));
+
+    function queryDom(selector, context) {
+        context = context || root;
+        // Redirect simple selectors to the more performant function
+        if (/^(#?[\w-]+|\.[\w-.]+)$/.test(selector)) {
+            switch (selector.charAt(0)) {
+                case '#':
+                    // Handle ID-based selectors
+                    return toArray([context.getElementById(selector.substr(1))]);
+                case '.':
+                    // Handle class-based selectors
+                    // Query by multiple classes by converting the selector 
+                    // string into single spaced class names
+                    var classes = selector.substr(1).replace(/\./g, ' ');
+                    return toArray(context.getElementsByClassName(classes));
+                default:
+                    // Handle tag-based selectors
+                    //return [].slice.call(context.getElementsByTagName(selector));
+                    return toArray(context.getElementsByTagName(selector));
+            }
+        }
+        // Default to `querySelectorAll`
+        return toArray(context.querySelectorAll(selector));
+    }
+
+    function toArray(nodeList) {
+        let arr = [];
+        for(let i = 0, length = nodeList.length; i < length; i++) {
+            arr[i] = EnhancedElement(nodeList[i]);
+        }
+        return arr;
+    } 
 
     e.domReady = callback => {
         if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
