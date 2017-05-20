@@ -1,12 +1,7 @@
 (() => {
     var root = document;
 
-    //let e = window.e = selector => selector ? [].slice.call(document.querySelectorAll(selector)).map(EnhancedElement) : 'v0.1';
-    let e = window.e = (selector, context) => selector ? {
-        elements: queryDom(selector, context),
-        addClass: function(cssClass) { this.elements.forEach(el => el.addClass(cssClass))}
-     } : 'v0.1';
-
+    let e = window.e = (selector, context) => selector ? queryDom(selector, context) : 'v0.1';
     e.single = selector => EnhancedElement(document.querySelector(selector));
 
     function queryDom(selector, context) {
@@ -36,9 +31,9 @@
     function toArray(nodeList) {
         let arr = [];
         for(let i = 0, length = nodeList.length; i < length; i++) {
-            arr[i] = EnhancedElement(nodeList[i]);
+            arr[i] = nodeList[i];
         }
-        return arr;
+        return Enhance(arr);
     } 
 
     e.domReady = callback => {
@@ -56,22 +51,39 @@
     //DOM manipulation
     e.create = tagName => document.createElement(tagName);
 
-    function EnhancedElement(element) {
-        return {
-            elem: element,
-            addClass: function(cssClass) {
-                if(this.elem && cssClass) this.elem.classList.add(cssClass);
-                return this;
-            },
-            removeClass: function(cssClass) {
-                if(this.elem && cssClass) this.elem.classList.remove(cssClass);
-                return this;
-            },
-            hasClass: function(cssClass) {
-                if(!this.elem || !cssClass) return false;
-                return this.elem.classList.contains(cssClass);
+    function Enhance(nodeArray) {
+        nodeArray.addClass = function(cssClass) {
+            if(!this.length || !cssClass) return this;
+            for(let i = 0, length = this.length; i < length; i++) {
+                this[i].classList.add(cssClass);
             }
-        }
+        };
+
+        nodeArray.removeClass = function(cssClass) {
+            if(!this.length || !cssClass) return this;
+            for(let i = 0, length = this.length; i < length; i++) {
+                this[i].classList.remove(cssClass);
+            }
+        };
+
+        nodeArray.hasClass = function(cssClass) {
+            if(!this.length || !cssClass) return false;
+            for(let i = 0, length = this.length; i < length; i++) {
+                if(!this[i].classList.contains(cssClass)) return false;
+            }
+
+            return true;
+        };
+
+        nodeArray.first = function() {
+            return Enhance([this[0]]);
+        };
+
+        nodeArray.last = function() {
+            return Enhance([this[this.length-1]]);
+        };
+
+        return nodeArray;
     }
 
     //AJAX
