@@ -46,38 +46,6 @@
         });
     }
 
-    //DOM manipulation
-    e.create = create;
-
-    function create(options) {
-        if(typeof options == 'string') return root.createElement(options);
-        else if(typeof options != 'object') throw Error('e.create | given value must be a string or an object.');
-
-        let element = root.createElement(options.tag);
-        let events = options.events;
-        if(options.content) element.innerHTML = options.content
-        if(events) {
-            for(let i = 0, length = events.length; i < length; i++) {
-                let e = events[i];
-                element.addEventListener(e.type, e.listener);
-            }
-        }
-        let children = options.children;
-
-        for(let p in options) {
-            if(p == 'children' || p == 'tag' || p == 'content' || p == 'events') continue;
-            element.setAttribute(p, options[p]);
-        }
-
-        if(children) {
-            for(let i = 0, length = children.length; i < length; i++) {
-                element.appendChild(create(children[i]));
-            }
-        }
-
-        return element;
-    }
-
     function Enhance(nodeArray) {
         nodeArray.addClass = function(cssClass) {
             if(!this.length || !cssClass) return this;
@@ -113,50 +81,9 @@
         return nodeArray;
     }
 
+    //DOM manipulation
+    //=require dom-create.js
+
     //AJAX
-    function ajax(options) {
-        return new Promise((resolve, reject) => {
-            if(typeof options == 'string') options = {url: options};
-
-            options = Object.assign({
-                method: 'GET'
-            }, options);
-
-            let headers = options.headers;
-            let xhr = new XMLHttpRequest();
-            
-            xhr.onerror = function() {
-                reject([xhr.status, xhr]);
-            };
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    xhr.status == 200 ? resolve(xhr.responseText) : reject([xhr.status, xhr]);
-                }
-            };
-            xhr.open(options.method, options.url, true);
-
-            if(headers) {
-                for(let p in headers) xhr.setRequestHeader(p, headers[p]);
-            }
-            let data = options.data;
-            let postData;
-            if(data) {
-                if(options.type == 'json' && typeof data != 'string') {
-                    postData = JSON.stringify(data);
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                }
-                else {
-                    postData = Object.keys(data)
-                        .map(key => key + '=' + encodeURIComponent(data[key]))
-                        .join('&');
-                }
-            }
-
-            xhr.send(postData);
-        });
-    }
-
-    e.ajax = ajax;
-    e.get = url => ajax(url);
-    e.post = (url, data, options) => ajax(Object.assign({ url, data, method: 'POST' }, options));
+    //=require ajax.js
 })();
