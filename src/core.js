@@ -35,13 +35,13 @@
     } 
 
     e.domReady = callback => {
-        if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
+        if (root.readyState === "complete" || root.readyState === "loaded" || root.readyState === "interactive") {
             //already loaded
             callback();
             return;
         }
 
-        document.addEventListener("DOMContentLoaded", function(event) { 
+        root.addEventListener("DOMContentLoaded", function(event) { 
             callback();
         });
     }
