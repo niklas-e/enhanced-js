@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const rename = require('gulp-rename');
 const uglify = require('gulp-uglify');
 const pump = require('pump');
 const babel = require('gulp-babel');
@@ -12,6 +13,7 @@ gulp.task('build', callback => {
             presets: ['es2015']
         }),
         uglify(),
+        rename('enhanced.js'),
         gulp.dest('dist')
     ], callback);
 });
