@@ -1,7 +1,7 @@
 (() => {
-    let e = (selector, context) => selector ? queryDom(selector, context) : 'v0.1';
+    let e = (selector, context) => selector ? queryDom(selector, context) : 'v{{versionNumber}}';
     e.single = (selector, context) => queryDom(selector, context).first();
-    
+
     if(typeof module === "object" && module.exports) {
         // CommonJS support
         module.exports = e;

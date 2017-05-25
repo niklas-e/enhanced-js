@@ -2,10 +2,24 @@
   "name": "enhanced-js",
   "version": "1.0.0",
   "description": "Lightweight library to write more compact and readable code",
-  "main": "core.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niklas-e/enhanced-js.git"
   },
+  "main": "./dist/enhanced.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp build"
+  },
+  "keywords": [
+    "javascript",
+    "plain",
+    "enhanced",
+    "dom",
+    "query",
+    "ajax",
+    "selector"
+  ],
   "author": "Niklas Engblom",
   "license": "MIT",
   "devDependencies": {
@@ -13,7 +27,9 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-include": "^2.3.1",
+    "gulp-insert": "^0.5.0",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
     "gulp-uglify": "^2.1.2",
     "pump": "^1.0.2"
   }

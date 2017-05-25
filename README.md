@@ -145,6 +145,14 @@ e.post('/api/posts', { name: 'Matti Meikäläinen' }, { type: 'json' })
     });
 ```
 
+### Miscellaneous
+
+Check version in use
+```
+// Returns version number as a string
+var currentVersion = e();
+```
+
 ## Licensed under MIT License
 
 Copyright 2017 Niklas Engblom
