@@ -2,7 +2,7 @@
     var root = document;
 
     let e = window.e = (selector, context) => selector ? queryDom(selector, context) : 'v0.1';
-    e.single = selector => EnhancedElement(document.querySelector(selector));
+    e.single = (selector, context) => queryDom(selector, context).first();
 
     function queryDom(selector, context) {
         context = context || root;
@@ -10,17 +10,15 @@
         if (/^(#?[\w-]+|\.[\w-.]+)$/.test(selector)) {
             switch (selector.charAt(0)) {
                 case '#':
-                    // Handle ID-based selectors
+                    // ID selectors
                     return toArray([context.getElementById(selector.substr(1))]);
                 case '.':
-                    // Handle class-based selectors
-                    // Query by multiple classes by converting the selector 
-                    // string into single spaced class names
+                    // Class selectors
+                    // Allow multiple classes by converting the selector into single spaced class names
                     var classes = selector.substr(1).replace(/\./g, ' ');
                     return toArray(context.getElementsByClassName(classes));
                 default:
-                    // Handle tag-based selectors
-                    //return [].slice.call(context.getElementsByTagName(selector));
+                    // Tag selectors
                     return toArray(context.getElementsByTagName(selector));
             }
         }
