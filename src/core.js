@@ -57,16 +57,14 @@
     function Enhance(nodeArray) {
         nodeArray.addClass = function(cssClass) {
             if(!this.length || !cssClass) return this;
-            for(let i = 0, length = this.length; i < length; i++) {
-                this[i].classList.add(cssClass);
-            }
+            // Allow multiple classes
+            cssClass.split(' ').forEach(c => addClass(this, c));
         };
 
         nodeArray.removeClass = function(cssClass) {
             if(!this.length || !cssClass) return this;
-            for(let i = 0, length = this.length; i < length; i++) {
-                this[i].classList.remove(cssClass);
-            }
+            // Allow multiple classes
+            cssClass.split(' ').forEach(c => removeClass(this, c));
         };
 
         nodeArray.hasClass = function(cssClass) {
@@ -89,9 +87,12 @@
         return nodeArray;
     }
 
-    //DOM manipulation
+    // Attributes
+    //=require attributes.js
+
+    // DOM manipulation
     //=require dom-create.js
 
-    //AJAX
+    // AJAX
     //=require ajax.js
 })();
