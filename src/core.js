@@ -114,23 +114,49 @@
     }
 
     //AJAX
-    e.ajax = options => new Promise((resolve, reject) => {
-        if(typeof options == 'string') options = {url: options};
+    function ajax(options) {
+        return new Promise((resolve, reject) => {
+            if(typeof options == 'string') options = {url: options};
 
-        options = Object.assign({
-            method: 'GET'
-        }, options);
+            options = Object.assign({
+                method: 'GET'
+            }, options);
 
-        let xhttp = new XMLHttpRequest();
-        xhttp.onerror = function() {
-            reject(this);
-        };
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                resolve(this.responseText);
+            let headers = options.headers;
+            let xhr = new XMLHttpRequest();
+            
+            xhr.onerror = function() {
+                reject([xhr.status, xhr]);
+            };
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    xhr.status == 200 ? resolve(xhr.responseText) : reject([xhr.status, xhr]);
+                }
+            };
+            xhr.open(options.method, options.url, true);
+
+            if(headers) {
+                for(let p in headers) xhr.setRequestHeader(p, headers[p]);
             }
-        };
-        xhttp.open(options.method, options.url, true);
-        xhttp.send();
-    });
+            let data = options.data;
+            let postData;
+            if(data) {
+                if(options.type == 'json' && typeof data != 'string') {
+                    postData = JSON.stringify(data);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                }
+                else {
+                    postData = Object.keys(data)
+                        .map(key => key + '=' + encodeURIComponent(data[key]))
+                        .join('&');
+                }
+            }
+
+            xhr.send(postData);
+        });
+    }
+
+    e.ajax = ajax;
+    e.get = url => ajax(url);
+    e.post = (url, data, options) => ajax(Object.assign({ url, data, method: 'POST' }, options));
 })();
