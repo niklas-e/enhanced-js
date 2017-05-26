@@ -1,8 +1,12 @@
 e.create = create;
 
 function create(options) {
+    // Create an empty element if only string is passed
     if(typeof options == 'string') return root.createElement(options);
-    else if(typeof options != 'object') throw Error('e.create | given value must be a string or an object.');
+    // DOM element was passed, most likely as a children -> return as is
+    else if(options instanceof Element || options instanceof Node) return options;
+    // Fail, if passed value is not string, element/node or object
+    else if(typeof options != 'object') throw Error('e.create | given value must be a string, DOM element or an object.');
 
     let element = root.createElement(options.tag);
     let events = options.events;
