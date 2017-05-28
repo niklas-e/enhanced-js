@@ -1,12 +1,13 @@
 function ajax(options) {
     return new Promise((resolve, reject) => {
         if(typeof options == 'string') options = {url: options};
+        let type = options.type;
 
         options = Object.assign({
             method: 'GET'
         }, options);
 
-        let headers = options.headers;
+        let headers = options.headers || {};
         let xhr = new XMLHttpRequest();
         
         xhr.onerror = function() {
@@ -14,7 +15,8 @@ function ajax(options) {
         };
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
-                xhr.status == 200 ? resolve(xhr.responseText) : reject([xhr.status, xhr]);
+                let result = headers['Accept'] != 'application/json' ? xhr.responseText : JSON.parse(xhr.responseText);
+                xhr.status == 200 ? resolve(result) : reject([xhr.status, xhr]);
             }
         };
         xhr.open(options.method, options.url, true);
@@ -25,7 +27,7 @@ function ajax(options) {
         let data = options.data;
         let postData;
         if(data) {
-            if(options.type == 'json' && typeof data != 'string') {
+            if(type == 'json' && typeof data != 'string') {
                 postData = JSON.stringify(data);
                 xhr.setRequestHeader('Content-Type', 'application/json');
             }
