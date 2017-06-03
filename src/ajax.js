@@ -15,13 +15,14 @@ function ajax(options) {
         };
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
-                if(xhr.status == 200) {
+                let status = xhr.status;
+                if(status >= 200 && status <= 300) {
                     let result = headers['Accept'] != 'application/json' ? xhr.responseText : JSON.parse(xhr.responseText);
                     return resolve(result);
                 }
                 
                 // Reject if response was not OK
-                reject([xhr.status, xhr]);
+                reject([status, xhr]);
             }
         };
         xhr.open(options.method, options.url, true);
