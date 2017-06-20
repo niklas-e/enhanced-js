@@ -1,14 +1,14 @@
 e.create = create;
 
-function create(options) {
+function create(options, namespace) {
     // Create an empty element if only string is passed
-    if(typeof options == 'string') return root.createElement(options);
+    if(typeof options == 'string') return !namespace ? root.createElement(options) : root.createElementNS(namespace, options);
     // DOM element was passed, most likely as a children -> return as is
     else if(options instanceof Element || options instanceof Node) return options;
     // Fail, if passed value is not string, element/node or object
     else if(typeof options != 'object') throw Error('e.create | given value must be a string, DOM element or an object.');
 
-    let element = root.createElement(options.tag);
+    let element = !namespace ? root.createElement(options.tag) : root.createElementNS(namespace, options.tag);
     let events = options.events;
     if(options.content) element.innerHTML = options.content
     if(events) {
