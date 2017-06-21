@@ -26,7 +26,7 @@ function create(options, namespace) {
 
     if(children) {
         for(let i = 0, length = children.length; i < length; i++) {
-            element.appendChild(create(children[i]));
+            element.appendChild(create(children[i], namespace));
         }
     }
 
