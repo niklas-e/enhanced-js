@@ -11,6 +11,10 @@ function create(options, namespace) {
     let element = !namespace ? root.createElement(options.tag) : root.createElementNS(namespace, options.tag);
     let events = options.events;
     if(options.content) element.innerHTML = options.content
+    if(typeof options.style == 'object') {
+        setStyles(element, options.style)
+        delete options.style
+    }
     if(events) {
         for(let i = 0, length = events.length; i < length; i++) {
             let e = events[i];
