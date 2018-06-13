@@ -56,6 +56,7 @@
 
     function Enhance(nodeArray) {
         addClassNameExtensions(nodeArray);
+        addStyleExtensions(nodeArray);
 
         nodeArray.first = function() {
             return Enhance([this[0]]);
@@ -70,6 +71,7 @@
 
     // Extensions
     //=require extensions/classNames.js
+    //=require extensions/styles.js
 
     // DOM manipulation
     //=require dom-create.js
