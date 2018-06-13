@@ -9,7 +9,8 @@ function addStyleExtensions(nodeArray) {
         if(!this.length || !styles) return this;
 
         for(let i = 0; i < this.length; i++) {
-            setStyles(this[i], styles);
+            if(typeof styles == 'object') setStyles(this[i], styles);
+            else this[i].style = styles;
         }
     };
 }
