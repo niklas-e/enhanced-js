@@ -19,7 +19,8 @@
             switch (selector.charAt(0)) {
                 case '#':
                     // ID selectors
-                    return toArray([context.getElementById(selector.substr(1))]);
+                    var element = context.getElementById(selector.substr(1))
+                    return element !== null ? toArray([element]) : [];
                 case '.':
                     // Class selectors
                     // Allow multiple classes by converting the selector into single spaced class names
